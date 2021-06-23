@@ -5,7 +5,11 @@ var { Product } = require("../../models/product");
 
 //GET all products
 router.get("/", async (req, res) => {
-  let products = await Product.find();
+  //First three lines are for pagination
+  let page = Number(req.query.page ? req.query.page : 1);
+  let perPage = Number(req.query.perPage ? req.query.perPage : 10);
+  let skipRecords = perPage * (page - 1);
+  let products = await Product.find().skip(skipRecords).limit(perPage);
   return res.send(products);
 });
 
